@@ -7,10 +7,11 @@ const Edit = ({
   categories,
   setCategories,
 }) => {
-  const [editingRow, setEditingRow] = useState({});
+  
+  const [editingRow,setEditingRow] = useState({});
+  const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
     try {
       fetch(process.env.REACT_APP_SERVER_URL + "/api/categories/update-category", {
         method: "PUT",
@@ -49,6 +50,13 @@ const Edit = ({
     }
   };
 
+  function setEditingRowAndFormValues (record) {
+    setEditingRow(record);
+    form.setFieldsValue({
+      title: record.title
+    });
+  };
+
   const columns = [
     {
       title: "Category Title",
@@ -56,8 +64,8 @@ const Edit = ({
       render: (_, record) => {
         if (record._id === editingRow._id) {
           return (
-            <Form.Item className="mb-0" name="title">
-              <Input defaultValue={record.title} />
+            <Form.Item className='mb-0' name="title" initialValue={editingRow.title}>
+              <Input />
             </Form.Item>
           );
         } else {
@@ -71,12 +79,7 @@ const Edit = ({
       render: (_, record) => {
         return (
           <div>
-            <Button
-              type="link"
-              onClick={() => setEditingRow(record)}
-              className="pl-0"
-            >
-              Düzenle
+            <Button className="pl-0" type='link' onClick={() => setEditingRowAndFormValues(record)}>Düzenle
             </Button>
             <Button type="link" htmlType="submit" className="text-gray-500">
               Kaydet
@@ -93,7 +96,7 @@ const Edit = ({
       },
     },
   ];
-
+  
   return (
     <Modal
       open={isEditModalOpen}
@@ -101,12 +104,12 @@ const Edit = ({
       footer={false}
       onCancel={() => setIsEditModalOpen(false)}
     >
-      <Form onFinish={onFinish}>
+      <Form form={form} onFinish={onFinish}>
         <Table
           bordered
           dataSource={categories}
           columns={columns}
-          rowKey={"_id"}
+          rowKey="_id"
         />
       </Form>
     </Modal>

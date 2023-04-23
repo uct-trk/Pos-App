@@ -57,6 +57,7 @@ const Edit = () => {
           return item;
         })
       );
+      setIsEditModalOpen(false)
     } catch (error) {
       message.error("Bir şeyler yanlış gitti.");
       console.log(error);
@@ -79,6 +80,13 @@ const Edit = () => {
       }
     }
   };
+
+  form.setFieldsValue({
+    title: editingItem.title,
+    category :editingItem.category,
+    img: editingItem.img ,
+    price: editingItem.price,
+});
 
   const columns = [
     {
